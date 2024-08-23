@@ -1,0 +1,240 @@
+@model CustomerCompany; /*Call The Models for Record*/
+@{
+    ViewData["Title"] = "Edit Data";
+}
+
+<!--Bootstrap-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<!--Bootstrap-->
+
+<div class="row align-items-center mb-3">
+    <div class="col-4">
+        <a href="@Url.Action("ShowData", "Home")">
+            <img width="64" height="64" src="https://img.icons8.com/glyph-neue/64/previous.png" alt="previous" />
+        </a>
+    </div>
+    <div class="col-4">
+        <h1 class="text-center mb-3">Edit Customer Details</h1>
+    </div>
+</div>
+
+<style>
+    /* id CSS to style the text and button */
+
+    #SaveRightDown {
+        width: 150px;
+        height: 50px;
+        font-family: Arial;
+        font-size: 30px;
+    }
+
+    /*id CSS style rounded box*/
+    #rounded-border {
+        width: 800px;
+        height: 550px;
+        border: 2px solid #000; /* Border properties */
+        border-radius: 20px; /* Adjust this value to change the roundness */
+        padding: 20px; /* Add padding inside the border */
+    }
+
+    /*id CSS style header bold || textinput border blue*/
+    #Bold {
+        font-weight: bold;
+        font-size: 20;
+        font-family: Arial;
+    }
+
+    #TextinputBorderBlue {
+        border-color: blue;
+        border-radius: 5px;
+    }
+
+    #TextareaBorderBlue {
+        border-color: blue;
+        border-radius: 5px;
+        resize: none;
+        font-family: Arial;
+        font-size: 18;
+    }
+
+</style>
+
+<form method="post" asp-controller="Home" asp-action="Edit" class="container d-flex flex-column">
+    @*When you type input data -> from AddData.cshtml to Home send to Home*@
+    <div class="row align-items-center mb-3">
+        @* เก็บชื่อบริษัท สาขา และ *@
+        <div class="col-4 form-group">
+            <label asp-for="Company_Name" id="Bold" for="companyName" class=" mb-1">Company name</label>
+            <input asp-for="Company_Name" id="TextinputBorderBlue" type="text" class="form-control  specialCharInput" placeholder="Company Name"
+                   required="" oninvalid="this.setCustomValidity('Please Enter Company name')" oninput="setCustomValidity('')">
+        </div>
+        <div class="col-4 form-group">
+            <label asp-for="Branch" id="Bold" for="branch" class=" mb-1 ">Branch</label>
+            <input asp-for="Branch" id="TextinputBorderBlue" type="text" class="form-control  specialCharInput" placeholder="Branch"
+                   required="" oninvalid="this.setCustomValidity('Please Enter Company Branch')" oninput="setCustomValidity('')">
+        </div>
+        <div class="col-4 form-group">
+            <label asp-for="Nationality" id="Bold" class=" mb-1 ">Nationallity</label><br>
+            <input asp-for="Nationality" id="TextinputBorderBlue" type="text" class="form-control specialCharInput" placeholder="Nationallity"
+                   required="" oninvalid="this.setCustomValidity('Please Enter Nationallity')" oninput="setCustomValidity('')">
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-3">
+        @* เก็บเว็บไซต์ โปรดัค และประเภทธุรกิจ *@
+        <div class="col-4 form-group">
+            <label asp-for="Key_Person" id="Bold" for="customerrequest" class=" mb-1 ">Key Person</label>
+            <input asp-for="Key_Person" id="TextinputBorderBlue" type="text" class="form-control  specialCharInput" placeholder="Key Person"
+                   required="" oninvalid="this.setCustomValidity('Please Enter Key Person Name')" oninput="setCustomValidity('')">
+        </div>
+        <div class="col-4 form-group">
+            <label asp-for="Key_Person_Phone" id="Bold" for="customerrequest" class=" mb-1 ">Key Person Telephone Number</label>
+            <input asp-for="Key_Person_Phone" id="TextinputBorderBlue" type="text" class="form-control  specialCharInput" placeholder="Key Person Telephone Number"
+                   required="" oninvalid="this.setCustomValidity('Please Enter Key Person Name')" oninput="setCustomValidity('')">
+        </div>
+        <div class="col-4 form-group">
+            <label asp-for="Website" id="Bold" for="inputStart" class=" mb-1 ">Website</label>
+            <input asp-for="Website" id="TextinputBorderBlue" type="text" class="form-control specialCharInput" placeholder="Website"
+                   required="" oninvalid="this.setCustomValidity('Please Enter Website')" oninput="setCustomValidity('')">
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-3">
+        @* เก็บช่องทางติดต่อโดยเบอร์โทรบริษัท หรือลูกค้า อีเมล *@
+        <div class="col-4 form-group">
+            <label asp-for="ProductService" id="Bold" for="inputCenter" class=" mb-1 ">Product/Service</label>
+            <input asp-for="ProductService" id="TextinputBorderBlue" type="text" class="form-control specialCharInput" placeholder="Product/Service"
+                   required="" oninvalid="this.setCustomValidity('Please Enter Product/Service')" oninput="setCustomValidity('')">
+        </div>
+        <div class="col-4 form-group">
+            <label asp-for="Type_of_Business" id="Bold" for="inputEnd" class=" mb-1 ">Type of Business</label>
+            <input asp-for="Type_of_Business" id="TextinputBorderBlue" type="text" class="form-control specialCharInput" placeholder="Type of Business"
+                   required="" oninvalid="this.setCustomValidity('Please Enter Type of Business')" oninput="setCustomValidity('')">
+        </div>
+        <div class="col-4 form-group">
+            <label asp-for="Number_of_employees" id="Bold" for="inputStart" class=" mb-1 ">Number of employees</label>
+            <input asp-for="Number_of_employees" id="TextinputBorderBlue" type="number" min="1" class="form-control specialCharInput" placeholder="Number of employees"
+                   required="" oninvalid="this.setCustomValidity('Please Enter valid employee amounts')" oninput="setCustomValidity('')">
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-3">
+        @* เก็บประเภทจดทะเบียนบริษัท วันก่อตั้ง *@
+        <div class="col-4 form-group">
+            <label asp-for="Fax" id="Bold" for="inputStart" class=" mb-1 ">Fax</label>
+            <textarea asp-for="Fax" id="TextareaBorderBlue" type="text" class="form-control specialCharNumber" placeholder="Fax"
+                      required="" oninvalid="this.setCustomValidity('Please Enter Fax Contact')" oninput="setCustomValidity('')"></textarea>
+        </div>
+        <div class="col-4 form-group">
+            <label asp-for="Authorized_person_contract_Phone" id="Bold" for="inputCenter" class=" mb-1 ">Authorized person contract number</label>
+            <textarea asp-for="Authorized_person_contract_Phone" id="TextareaBorderBlue" type="text" class="form-control specialCharNumber" placeholder="Authorized person contract number"
+                      required="" oninvalid="this.setCustomValidity('Please Enter Manager Tel.')" oninput="setCustomValidity('')"></textarea>
+        </div>
+        <div class="col-4 form-group">
+            <label asp-for="Email" id="Bold" for="inputEnd" class=" mb-1 ">E-mail</label>
+            <textarea asp-for="Email" id="TextareaBorderBlue" type="text" class="form-control specialCharEmail" placeholder="E-mail"
+                      required="" oninvalid="this.setCustomValidity('Please Enter Email Contact')" oninput="setCustomValidity('')"></textarea>
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-3">
+        @* เก็บประเภทจดทะเบียนบริษัท วันก่อตั้ง *@
+        <div class="col-4 form-group">
+            <label asp-for="Address" id="Bold" for="Address" class="mb-1">Address</label>@*เก็บประเภทที่อยู่*@
+            <textarea asp-for="Address" class="form-control specialCharInput" id="TextareaBorderBlue" onkeyup="countWords(this);" maxlength="1000" cols="97" rows="3" placeholder="Address"
+                      required="" oninvalid="this.setCustomValidity('Please Enter valid address')" oninput="setCustomValidity('')"></textarea>
+        </div>
+
+        <div class="col-4 form-group">
+            <label asp-for="Date_of_Establishment" id="Bold" class=" mb-1 ">Date of Establishment</label>
+            <input asp-for="Date_of_Establishment" id="TextinputBorderBlue" type="date" class="form-control specialCharInput" placeholder="Date of Establishment"
+                   required="" oninvalid="this.setCustomValidity('Please Enter valid date')" oninput="setCustomValidity('')">
+        </div>
+
+        <div>
+            <label asp-for="JCC_Member" id="Bold" class=" mb-1 ">JCC_Member</label><br>
+            @Html.RadioButtonFor(model => model.JCC_Member, "Yes", new { @required = "required" }) Yes<br>
+            @Html.RadioButtonFor(model => model.JCC_Member, "No", new { @required = "required" }) No
+        </div>
+
+    </div>
+
+    <!--ปุ่ม Save ขวาล่าง-->
+    <button id="sendButton" class="btn btn-primary mt-3 SaveRightDown" type="submit">Save</button>
+
+</form>
+
+
+<!--Function-->
+
+<script>
+    /* กันกรอกอักขระพิเศษได้ตามที่กำหนด */
+    document.addEventListener('input', function (event) {
+        if (event.target.tagName === 'INPUT') {
+            const inputValue = event.target.value;
+            const sanitizedValue = inputValue.replace(/[^a-zA-Z0-9,():_'&@@.::~\s+-/]/g, '');
+            event.target.value = sanitizedValue;
+        }
+    });
+</script>
+
+<script>
+    /* สำหรับกรอกเบอร์ บล็อกอักษรตัวอื่น*/
+    // Get all elements with the specified class name
+    const inputs = document.querySelectorAll('.specialCharNumber');
+
+    // Loop through each input element and attach event listener
+    inputs.forEach(input => {
+        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+            const inputValue = event.target.value;
+            const sanitizedValue = inputValue.replace(/[^0-9\s/\+-/]/g, '');
+            event.target.value = sanitizedValue;
+        }
+    });
+</script>
+
+<script>
+    /* @* สำหรับกรอกอีเมล์ บล็อกอักษรตัวอื่น*@ */
+    // Get all elements with the specified class name
+    const inputs = document.querySelectorAll('.specialCharEmail');
+
+    // Loop through each input element and attach event listener
+    inputs.forEach(input => {
+        input.addEventListener('input', function (event) {
+            const inputValue = event.target.value;
+            const sanitizedValue = inputValue.replace(/[^a-zA-Z0-9_,@@.\s/\-]/g, '');
+            event.target.value = sanitizedValue;
+        });
+    });
+</script>
+
+@* <script>
+    var input = document.getElementById('searchTextField');
+    var autocomplete = new google.autocomplete(input)
+</script> *@
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    // Apply the fade-in transition effect when the page loads
+    $(document).ready(function () {
+        $('.fade').addClass('show');
+    });
+</script>
+
+<!-- Add the following script within your existing script tags or in a separate script section -->
+<script>
+    $(document).ready(function () {
+        $("#previousButton").click(function (e) {
+            e.preventDefault(); // Prevent the default behavior of the button click
+
+            // Fade out the entire body of the page
+            $("body").fadeOut(500, function () {
+                // After the fade-out animation completes, navigate to the AddData page
+                window.location.href = '@Url.Action("ShowData", "Home")';
+            });
+        });
+    });
+</script>

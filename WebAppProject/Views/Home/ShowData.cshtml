@@ -1,0 +1,474 @@
+﻿@model IEnumerable<WebAppProject.Models.CustomerCompany>;
+@{
+    ViewData["Title"] = "Show Data";
+}
+
+<!-- Add these links to your head section -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+
+<div class="loading-overlay">
+    <div class="loader"></div>
+</div>
+
+<h1 class="text-center">Customer Data</h1>
+
+<div class="row align-items-center mb-3">
+
+    <div class="col-4">
+        <button id="Add_button" type="button" href="@Url.Action("AddData", "Home")" class="btn btn-primary fade">Add +</button>
+    </div>
+
+    <div class="input-container col-4" style="width: 1000px;">
+        @* <form method="post" asp-action="ShowData" asp-controller="Home">
+        </form> *@
+        <button class="me-4" id="searchButton" type="submit">Search</button>
+        <input class="me-4" type="text" id="searchInput" placeholder="Search the company" style="width: 800px;">
+        <h6 id="selectedSearch" class="me-4">By</h6>
+
+        <div class="dropdown">
+            <a class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Select specify search
+            </a>
+            <ul class="dropdown-menu" style="position: relative; width: 100%;">
+                <li><button class="dropdown-item" type="button">Company Name</button></li>
+                <li><button class="dropdown-item" type="button">Branch</button></li>
+                <li><button class="dropdown-item" type="button">Key Person</button></li>
+                <li><button class="dropdown-item" type="button">Product/Service</button></li>
+                <li><button class="dropdown-item" type="button">Type of Business</button></li>
+                <li><button class="dropdown-item" type="button">Nationality</button></li>
+                <li><button class="dropdown-item" type="button">Date of Establishment</button></li>
+                <li style="margin-left: 10px;"><a class="btn btn-info">Reset To Default</a></li>
+            </ul>
+        </div>
+
+        <div class="col-4" id="Export_button">
+            <a asp-action="ExportExcel" asp-controller="Home" id="exportButton" class="btn btn-primary">Export File</a>
+        </div>
+
+    </div>
+
+    <div class="flex justify-content-end align-items-end">
+        <div class="dropdown dropend">
+            <a class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Show/Hide
+            </a>
+            <ul class="dropdown-menu checkbox-menu allow-focus">
+                <li style="width: 200px; position: relative; margin-left: 10px;">
+                    <input type="checkbox" checked data-column-index="0">&nbsp&nbsp Company Name<br />
+                    <input type="checkbox" checked data-column-index="1">&nbsp&nbsp Branch<br />
+                    <input type="checkbox" checked data-column-index="2">&nbsp&nbsp Key Person<br />
+                    <input type="checkbox" checked data-column-index="3">&nbsp&nbsp Key Person Telephone Number<br />
+                    <input type="checkbox" checked data-column-index="4">&nbsp&nbsp Website<br />
+                    <input type="checkbox" checked data-column-index="5">&nbsp&nbsp Product/Service<br />
+                    <input type="checkbox" checked data-column-index="6">&nbsp&nbsp Type of Business<br />
+                    <input type="checkbox" data-column-index="7">&nbsp;&nbsp; Fax<br />
+                    <input type="checkbox" data-column-index="8">&nbsp&nbsp Authorized person contract number<br />
+                    <input type="checkbox" data-column-index="9">&nbsp&nbsp E-mail<br />
+                    <input type="checkbox" data-column-index="10">&nbsp&nbsp Number of employees<br />
+                    <input type="checkbox" checked data-column-index="11">&nbsp&nbsp Nationality<br />
+                    <input type="checkbox" checked data-column-index="12">&nbsp&nbsp Date of establishment<br />
+                    <input type="checkbox" data-column-index="13">&nbsp&nbsp Address<br />
+                    <input type="checkbox" checked data-column-index="14">&nbsp&nbsp JCC Member<br />
+                    <a class="btn btn-success">Apply</a>
+                    <a class="btn btn-info">Reset</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    /* CSS to style the table */
+
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+    }
+
+    tr {
+        padding-top: 20px;
+    }
+
+    /* CSS to style div text input and button */
+    .input-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+        .input-container input {
+            padding: 8px;
+            margin-right: 10px; /* Adjust spacing between input and button */
+        }
+
+        .input-container button {
+            padding: 8px 20px;
+        }
+    /* Add this CSS code to your existing style section or CSS file */
+    #Add_button {
+        width: 100px;
+        height: 50px;
+        font-family: Arial;
+        font-size: 20px;
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out; /* Apply transition to all properties over 0.3 seconds with ease effect */
+        background-color: #007bff; /* Set initial background color */
+        color: #ffff; /* Set initial text color */
+        border: 2px solid #007bff; /* Set initial border color */
+        cursor: pointer; /* Set cursor to pointer to indicate it's clickable */
+    }
+
+        #Add_button:hover {
+            background-color: #0056b3; /* Change background color on hover */
+            border-color: #0056b3; /* Change border color on hover */
+        }
+
+        #Add_button:active {
+            transform: scale(0.95); /* Scale down the button when clicked */
+        }
+
+    #Export_button {
+        margin-left: 10px;
+    }
+
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+        z-index: 9999; /* Ensure the overlay appears on top of other elements */
+    }
+
+    .loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3); /* Grey border for loader animation */
+        border-top: 4px solid #3498db; /* Blue border for loader animation */
+        border-radius: 50%;
+        animation: spin 1s linear infinite; /* Loader spinning animation */
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+</style>
+
+<div style="overflow: auto;">
+    <table class="table table-bordered" id="searchResultsTable" style="table-layout: auto; white-space: nowrap;">
+        <!-- Add this at the bottom of your table -->
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Branch</th>
+                <th>Key Person</th>
+                <th>Key Person Tel.</th>
+                <th>Website</th>
+                <th>Product and Service</th>
+                <th>Type of Business</th>
+                <th>Fax</th>
+                <th>Other contact&nbspnumber</th>
+                <th>E-mail</th>
+                <th>Number of employees</th>
+                <th>Nationality</th>
+                <th>Date of establishment</th>
+                <th>Address</th>
+                <th>JCC Member ?</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td>@customer.Company_Name</td>
+                    <td>@customer.Branch</td>
+                    <td>@customer.Key_Person</td>
+                    <td><a href="tel:@customer.Key_Person_Phone">@customer.Key_Person_Phone</a></td>
+                    <td>@(customer.Website != "-" ? Html.Raw($"<a href='{customer.Website}' target='_blank'>{customer.Website}</a>") : "-")</td>
+                    <td>@customer.ProductService</td>
+                    <td>@customer.Type_of_Business</td>
+                    <td><a href="fax:@customer.Fax">@customer.Fax</a></td>
+                    <td><a href="tel:@customer.Authorized_person_contract_Phone">@customer.Authorized_person_contract_Phone</a></td>
+                    <td>@(customer.Email != "-" ? Html.Raw($"<a href='mailto:{customer.Email}' target='_blank'>{customer.Email}</a>") : "-")</td>
+                    <td>@customer.Number_of_employees</td>
+                    <td>@customer.Nationality</td>
+                    <td>@customer.Date_of_Establishment</td>
+                    <td>
+                        @(customer.Address != "-" ? Html.Raw($"<a href='https://www.google.com/maps/search/?api=1&query={customer.Company_Name}' target='_blank'>{customer.Address}</a>") : " - ")
+                    </td>
+                    <td>@customer.JCC_Member</td>
+                    <td>
+                        <a asp-controller="Home" asp-action="Edit" asp-route-id="@customer.Id">
+                            <img class="btn" width="40" height="40" src="https://img.icons8.com/ios-filled/50/edit--v1.png" alt="edit" />
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-controller="Home" asp-action="Delete" asp-route-id="@customer.Id" onclick="return confirm ('Do you want to delete @customer.Company_Name หรือไม่ ?')">
+                            <img width="40" height="40" src="https://img.icons8.com/glyph-neue/64/trash.png" alt="delete" />
+                        </a>
+                    </td>
+
+                    <td colspan="15" class="text-center">Not found</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!--Function-->
+<!--Can search all data which you want สามารถค้นหาข้อมูลได้ทุกประเภทตามโมเดล-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#searchButton").click(function () {
+            let searchString = $("#searchInput").val().toLowerCase();
+            let rows = $("table tbody tr");
+
+            rows.each(function () {
+                let Company_Name = $(this).find("td").text().toLowerCase();
+                if (Company_Name.includes(searchString)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    // Apply the fade-in transition effect when the page loads
+    $(document).ready(function () {
+        $('.fade').addClass('show');
+    });
+</script>
+
+<!-- Add the following script within your existing script tags or in a separate script section -->
+<script>
+    $(document).ready(function () {
+        $("#Add_button").click(function (e) {
+            e.preventDefault();
+
+            // Show the loading overlay
+            $(".loading-overlay").fadeIn(200);
+
+            // Delay the fade-out effect for demonstration purposes
+            setTimeout(function () {
+                // Fade out the entire body of the page after a delay (you can adjust the delay time)
+                $("body").fadeOut(500, function () {
+                    // After the fade-out animation completes, navigate to the AddData page
+                    window.location.href = '@Url.Action("AddData", "Home")';
+                });
+            }, 1000); // Adjust the delay time as needed
+        });
+    });
+</script>
+
+<!-- Almost block inspect/developer mode-->
+<script>
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    function ctrlShiftKey(e, keyCode) {
+        return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+    }
+
+    document.onkeydown = (e) => {
+        // Disable F12, Ctrl + Shift + I, Ctrl + Shift + J, Ctrl + U
+        if (
+            event.keyCode === 123 ||
+            ctrlShiftKey(e, 'I') ||
+            ctrlShiftKey(e, 'J') ||
+            ctrlShiftKey(e, 'C') ||
+            (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
+        )
+            return false;
+    };
+</script>
+
+@*Hide/Show Control dropdown check*@
+<!-- Add the following script within your existing script tags or in a separate script section -->
+<script>
+    $(document).ready(function () {
+        // Define default columns to show
+        var defaultColumnsToShow = [0, 1, 2, 3, 4, 5, 6, 11, 14, 15, 16];
+
+        // Function to handle checkbox changes
+        $('.checkbox-menu input[type="checkbox"]').change(function () {
+            var columnIndex = $(this).data('column-index'); // Get the data attribute for column index
+            toggleColumn(columnIndex); // Toggle the corresponding table column
+        });
+
+        // Apply button click event
+        $('.checkbox-menu .btn-success').click(function () {
+            $('.checkbox-menu').removeClass('show'); // Hide the dropdown after clicking Apply
+        });
+
+        // Reset button click event
+        $('.checkbox-menu .btn-info').click(function () {
+            // Reset checkboxes to default state
+            resetToDefault();
+        });
+
+        // Function to toggle table column visibility based on checkbox state
+        function toggleColumn(index) {
+            // Toggle visibility of the header and corresponding cells
+            $('table tr').each(function () {
+                $(this).find('td:eq(' + index + '), th:eq(' + index + ')').toggle();
+            });
+        }
+
+        // Function to reset checkboxes to default state
+        function resetToDefault() {
+            // Reset all checkboxes to default state and show default columns
+            $('.checkbox-menu input[type="checkbox"]').each(function () {
+                var columnIndex = $(this).data('column-index');
+                var isDefaultColumn = defaultColumnsToShow.includes(columnIndex);
+                $(this).prop('checked', isDefaultColumn);
+            });
+
+            // Show default columns and hide others
+            $('table tr').each(function () {
+                $('td, th', this).each(function (index) {
+                    var isDefaultColumn = defaultColumnsToShow.includes(index);
+                    $(this).toggle(isDefaultColumn);
+                });
+            });
+        }
+
+        // Dynamically handle the hide/show dropdown when columns change
+        function updateDropdown() {
+            var checkboxCount = $('.checkbox-menu input[type="checkbox"]').length;
+            var columnCount = $('table th').length;
+
+            if (checkboxCount !== columnCount) {
+                $('.checkbox-menu input[type="checkbox"]').remove(); // Clear existing checkboxes
+
+                $('table th').each(function (index) {
+                    // Create checkboxes for each column header
+                    var columnText = $(this).text();
+                    var checkbox = $('<input type="checkbox" checked data-column-index="' + index + '">');
+                    var isDefaultColumn = defaultColumnsToShow.includes(index);
+                    checkbox.prop('checked', isDefaultColumn); // Set checked state based on default columns
+                    checkbox.change(function () {
+                        var columnIndex = $(this).data('column-index');
+                        toggleColumn(columnIndex);
+                    });
+                    $('.checkbox-menu').append(checkbox).append(columnText).append('<br>');
+                });
+            }
+        }
+
+        // Call updateDropdown initially and whenever the document changes
+        updateDropdown();
+        $(document).on('DOMSubtreeModified', function () {
+            updateDropdown();
+        });
+
+        // Initial setup to show default columns
+        resetToDefault();
+    });
+</script>
+
+
+
+
+@*Specify Search*@
+<!-- Your existing HTML and Razor code -->
+<!-- Specify Search -->
+<script>
+    $(document).ready(function () {
+        // Function to handle dropdown item click
+        $('.dropdown-menu button').click(function () {
+            var selectedOption = $(this).text();
+            var columnIndex = getColumnIndex(selectedOption);
+
+            // Handle search button click
+            $('#searchButton').click(function () {
+                let searchString = $('#searchInput').val().toLowerCase();
+
+                // Show all rows initially
+                $('table tbody tr').show();
+
+                if (columnIndex !== null && searchString !== '') {
+                    // Loop through each row and filter based on selected column index
+                    $('table tbody tr').each(function () {
+                        var columnText = $(this).find('td').eq(columnIndex).text().toLowerCase();
+
+                        if (!columnText.includes(searchString)) {
+                            $(this).hide();
+                        }
+                    });
+                }
+
+                // Toggle "Not found" row visibility
+                toggleNotFoundRow();
+            });
+
+            // Reset button click event
+            $('.dropdown-menu .btn-info').click(function () {
+                // Reset search input and show all rows
+                $('#searchInput').val('');
+                $('table tbody tr').show();
+
+                // Hide "Not found" row
+                $('#notFoundRow').hide();
+            });
+        });
+
+        // Function to get the column index based on the selected option
+        function getColumnIndex(option) {
+            switch (option) {
+                case 'Company Name':
+                    return 0;
+                case 'Branch':
+                    return 1;
+                case 'Key Person':
+                    return 2;
+                case 'Product/Service':
+                    return 5;
+                case 'Type of Business':
+                    return 6;
+                case 'Nationality':
+                    return 11;
+                case 'Date of Establishment':
+                    return 12;
+                case 'JCC Group ?':
+                    return 14;
+                default:
+                    return null;
+            }
+        }
+
+        // Function to toggle "Not found" row visibility
+        function toggleNotFoundRow() {
+            let visibleRows = $('table tbody tr:visible').not('#notFoundRow');
+            let notFoundRow = $('#notFoundRow');
+
+            // Toggle "Not found" row visibility
+            notFoundRow.toggle(visibleRows.length === 0);
+        }
+    });
+</script>
+
+<!-- Add these links to your head section -->
